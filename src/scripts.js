@@ -52,6 +52,7 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
+
 async function geocodeAddress(address) {
   const response = await geocodingApi.geocode({
     address,
@@ -84,21 +85,25 @@ function createGraph(startCoords, goalCoords, cargoCapacity, numTrucks, vehicleT
 }
 
 function haversine(coord1, coord2) {
-  const R = 6371; // Earth radius in kilometers
-  const lat1 = coord1[0];
-  const lon1 = coord1[1];
-  const lat2 = coord2[0];
-  const lon2 = coord2[1];
-
-  const dLat = Math.radians(lat2 - lat1);
-  const dLon = Math.radians(lon2 - lon1);
-
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(Math.radians(lat1)) * Math.cos(Math.radians(lat2)) * Math.sin(dLon / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
+    function haversine(coord1, coord2) {
+        const R = 6371; // Earth radius in kilometers
+        const lat1 = degToRad(coord1[0]);
+        const lon1 = degToRad(coord1[1]);
+        const lat2 = degToRad(coord2[0]);
+        const lon2 = degToRad(coord2[1]);
+      
+        const dLat = lat2 - lat1;
+        const dLon = lon2 - lon1;
+      
+        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      
+        return R * c;
+      }
 }
-
+function degToRad(deg) {
+    return deg * (Math.PI / 180);
+  }
 async function dijkstra(graph, startNode, goalNode, cargoCapacity, numTrucks, vehicleType) {
     const distances = {};
     const paths = {};

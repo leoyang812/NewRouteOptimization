@@ -24,13 +24,10 @@
           <option value="medium">Medium</option>
           <option value="large">Large</option>
         </select>
+        <label for="num-waypoints">Number of Waypoints:</label>
+        <input type="number" id="num-waypoints" name="num-waypoints" min="0" value="0">
         <div id="waypoints">
-          <h3>Waypoints:</h3>
-          <label for="waypoint-1">Waypoint 1:</label>
-          <input type="text" id="waypoint-1" name="waypoint-1">
-          <label for="waypoint-2">Waypoint 2:</label>
-          <input type="text" id="waypoint-2" name="waypoint-2">
-          <!-- Add more waypoints as needed -->
+            <!-- Waypoints will be generated here -->
         </div>
         <button type="submit">Calculate Route</button>
       </form>
@@ -41,7 +38,6 @@
         function initMap() {
           const startAddressInput = document.getElementById('start-address');
           const goalAddressInput = document.getElementById('goal-address');
-          const waypointInputs = document.querySelectorAll('#waypoints input[type="text"]');
 
           const startAutocomplete = new google.maps.places.Autocomplete(startAddressInput, {
             componentRestrictions: { country: 'ca' },
@@ -52,14 +48,35 @@
             componentRestrictions: { country: 'ca' },
             types: ['address'],
           });
-
-          waypointInputs.forEach((input) => {
-            const autocomplete = new google.maps.places.Autocomplete(input, {
-              componentRestrictions: { country: 'ca' },
-              types: ['address'],
-            });
-          });
         }
+
+        // Add event listener to handle adding waypoints
+        document.getElementById('num-waypoints').addEventListener('change', () => {
+          const numWaypoints = parseInt(document.getElementById('num-waypoints').value);
+          const waypointsDiv = document.getElementById('waypoints');
+
+          // Remove existing waypoints
+          while (waypointsDiv.firstChild) {
+            waypointsDiv.firstChild.remove();
+          }
+
+          // Add new waypoints
+          for (let i = 0; i < numWaypoints; i++) {
+            const label = document.createElement('label');
+            label.textContent = `Waypoint ${i + 1}:`;
+            waypointsDiv.appendChild(label);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `waypoint-${i}`;
+            input.name = `waypoints[]`;
+            input.required = true;
+            waypointsDiv.appendChild(input);
+
+            const br = document.createElement('br');
+            waypointsDiv.appendChild(br);
+          }
+        });
       </script>
 </body>
 </html>
