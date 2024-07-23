@@ -12,23 +12,30 @@
         <h2>Route Optimization</h2>
         <label for="start-address">Start Address:</label>
         <input type="text" id="start-address" name="start-address" required>
+        <br><br>
         <label for="goal-address">Goal Address:</label>
         <input type="text" id="goal-address" name="goal-address" required>
-        <label for="cargo-capacity">Cargo Capacity:</label>
+        <br><br>
+        <label for="cargo-capacity">Cargo Capacity (cubic feet):</label>
         <input type="number" id="cargo-capacity" name="cargo-capacity" required>
+        <br><br>
         <label for="num-trucks">Number of Trucks:</label>
         <input type="number" id="num-trucks" name="num-trucks" required>
+        <br><br>
         <label for="vehicle-type">Vehicle Type:</label>
         <select id="vehicle-type" name="vehicle-type" required>
           <option value="small">Small</option>
           <option value="medium">Medium</option>
           <option value="large">Large</option>
         </select>
+        <br><br>
         <label for="num-waypoints">Number of Waypoints:</label>
         <input type="number" id="num-waypoints" name="num-waypoints" min="0" value="0">
+        <br><br>
         <div id="waypoints">
             <!-- Waypoints will be generated here -->
         </div>
+        <br><br>
         <button type="submit">Calculate Route</button>
       </form>
       
@@ -75,6 +82,8 @@
 
             const br = document.createElement('br');
             waypointsDiv.appendChild(br);
+            const br2 = document.createElement('br');
+            waypointsDiv.appendChild(br2);
           }
         });
       </script>
