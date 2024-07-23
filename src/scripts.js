@@ -3,13 +3,11 @@ import { google } from 'googleapis';
 const apiKey = 'AIzaSyBLWsl5v2a7kj2ggZnTuAhHt3WzamVNPE0';
 const geocodingApi = google.maps.geocoding('v3');
 const directionsApi = google.maps.directions('v3');
-const placesApi = google.maps.places('v3');
 
 const form = document.getElementById('route-form');
 const resultDiv = document.getElementById('result');
 const startAddressInput = document.getElementById('start-address');
 const goalAddressInput = document.getElementById('goal-address');
-const waypointInputs = document.querySelectorAll('#waypoints input[type="text"]');
 
 // Create autocomplete objects for start and goal addresses
 const startAutocomplete = new google.maps.places.Autocomplete(startAddressInput, {
@@ -21,13 +19,6 @@ const goalAutocomplete = new google.maps.places.Autocomplete(goalAddressInput, {
   types: ['address'],
 });
 
-waypointInputs.forEach((input) => {
-  const autocomplete = new google.maps.places.Autocomplete(input, {
-    componentRestrictions: { country: 'ca' },
-    types: ['address'],
-  });
-});
-
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -36,16 +27,14 @@ form.addEventListener('submit', async (e) => {
   const cargoCapacity = parseInt(document.getElementById('cargo-capacity').value);
   const numTrucks = parseInt(document.getElementById('num-trucks').value);
   const vehicleType = document.getElementById('vehicle-type').value;
-  const waypoints = Array.from(waypointInputs).map((input) => input.value);
 
   try {
     const startCoords = await geocodeAddress(startAddress);
     const goalCoords = await geocodeAddress(goalAddress);
-    const waypointCoords = await Promise.all(waypoints.map(geocodeAddress));
 
-    const graph = createGraph(startCoords, goalCoords, waypointCoords, cargoCapacity, numTrucks, vehicleType);
+    const graph = createGraph(startCoords, goalCoords, cargoCapacity, numTrucks, vehicleType);
     const distances = await dijkstra(graph, startCoords, goalCoords, cargoCapacity, numTrucks, vehicleType);
-    const optimizedPath = reconstructPath(distances, startCoords, goalCoords, waypointCoords);
+    const optimizedPath = reconstructPath(distances, startCoords, goalCoords);
     const totalDistance = calculateTotalDistance(graph, optimizedPath);
     const emissions = calculateEmissions(totalDistance, vehicleType);
 
@@ -72,4 +61,67 @@ async function geocodeAddress(address) {
   return [coords.lat, coords.lng];
 }
 
-//... rest of the functions remain the same...
+function createGraph(startCoords, goalCoords, cargoCapacity, numTrucks, vehicleType) {
+  const graph = {};
+  graph.nodes = [startCoords, goalCoords];
+  graph.edges = {};
+  graph.distances = {};
+
+  // Add edges and distances to the graph
+  for (let i = 0; i < graph.nodes.length; i++) {
+    for (let j = i + 1; j < graph.nodes.length; j++) {
+      const fromNode = graph.nodes[i];
+      const toNode = graph.nodes[j];
+      const distance = haversine(fromNode, toNode);
+      graph.edges[fromNode] = graph.edges[fromNode] || [];
+      graph.edges[fromNode].push(toNode);
+      graph.distances[[fromNode, toNode]] = distance;
+      graph.distances[[toNode, fromNode]] = distance;
+    }
+  }
+
+  return graph;
+}
+
+function haversine(coord1, coord2) {
+  const R = 6371; // Earth radius in kilometers
+  const lat1 = coord1[0];
+  const lon1 = coord1[1];
+  const lat2 = coord2[0];
+  const lon2 = coord2[1];
+
+  const dLat = Math.radians(lat2 - lat1);
+  const dLon = Math.radians(lon2 - lon1);
+
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(Math.radians(lat1)) * Math.cos(Math.radians(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
+}
+
+async function dijkstra(graph, startNode, goalNode, cargoCapacity, numTrucks, vehicleType) {
+    const distances = {};
+    const paths = {};
+    const queue = [startNode];
+  
+    distances[startNode] = 0;
+    paths[startNode] = [];
+  
+    while (queue.length > 0) {
+      const currentNode = queue.shift();
+      const currentDistance = distances[currentNode];
+  
+      for (const neighbor of graph.edges[currentNode]) {
+        const distance = currentDistance + graph.distances[[currentNode, neighbor]];
+        const newCargo = cargoCapacity - numTrucks * vehicleType;
+  
+        if (!distances[neighbor] || distance < distances[neighbor] && newCargo >= 0) {
+          distances[neighbor] = distance;
+          paths[neighbor] = [...paths[currentNode], neighbor];
+          queue.push(neighbor);
+        }
+      }
+    }
+  
+    return distances;
+  }
