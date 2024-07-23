@@ -9,6 +9,7 @@
 </head>
 <body>
     <form id="route-form">
+        <h2>Route Optimization</h2>
         <label for="start-address">Start Address:</label>
         <input type="text" id="start-address" name="start-address" required>
         <label for="goal-address">Goal Address:</label>
@@ -23,6 +24,14 @@
           <option value="medium">Medium</option>
           <option value="large">Large</option>
         </select>
+        <div id="waypoints">
+          <h3>Waypoints:</h3>
+          <label for="waypoint-1">Waypoint 1:</label>
+          <input type="text" id="waypoint-1" name="waypoint-1">
+          <label for="waypoint-2">Waypoint 2:</label>
+          <input type="text" id="waypoint-2" name="waypoint-2">
+          <!-- Add more waypoints as needed -->
+        </div>
         <button type="submit">Calculate Route</button>
       </form>
       
@@ -32,6 +41,7 @@
         function initMap() {
           const startAddressInput = document.getElementById('start-address');
           const goalAddressInput = document.getElementById('goal-address');
+          const waypointInputs = document.querySelectorAll('#waypoints input[type="text"]');
 
           const startAutocomplete = new google.maps.places.Autocomplete(startAddressInput, {
             componentRestrictions: { country: 'ca' },
@@ -41,6 +51,13 @@
           const goalAutocomplete = new google.maps.places.Autocomplete(goalAddressInput, {
             componentRestrictions: { country: 'ca' },
             types: ['address'],
+          });
+
+          waypointInputs.forEach((input) => {
+            const autocomplete = new google.maps.places.Autocomplete(input, {
+              componentRestrictions: { country: 'ca' },
+              types: ['address'],
+            });
           });
         }
       </script>
