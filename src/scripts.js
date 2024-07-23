@@ -130,9 +130,9 @@ async function dijkstra(graph, startNode, goalNode, cargoCapacity, numTrucks, ve
   return distances;
 }
 
-// Add the event listener to the optimize-button element after the DOM has loaded
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('optimize-button').addEventListener('click', () => {
-    document.getElementById('haulstream-image').style.display = 'block';
-  });
+// Add the event listener to the optimize-button element
+document.getElementById('optimize-button').addEventListener('click', () => {
+  document.getElementById('haulstream-image').style.display = 'block';
+  resultDiv.innerHTML += `<p>Optimization in progress...</p>`;
+  // You can add more code here to handle the optimization process
 });
