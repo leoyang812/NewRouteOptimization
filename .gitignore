@@ -1,0 +1,23 @@
+# Node.js and npm files
+node_modules/
+package-lock.json
+
+# Vercel build output
+public/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.iml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp

@@ -1,1 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Optimization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Route Optimization</h1>
+    <form id="route-form">
+        <label for="start-address">Start Address:</label>
+        <input type="text" id="start-address" required>
+        <label for="goal-address">Goal Address:</label>
+        <input type="text" id="goal-address" required>
+        <label for="cargo-capacity">Cargo Capacity (sq ft):</label>
+        <input type="number" id="cargo-capacity" required>
+        <label for="num-trucks">Number of Trucks:</label>
+        <input type="number" id="num-trucks" required>
+        <label for="vehicle-type">Vehicle Type:</label>
+        <select id="vehicle-type">
+            <option value="small_truck">Small Truck</option>
+            <option value="medium_truck">Medium Truck</option>
+            <option value="large_truck">Large Truck</option>
+        </select>
+        <button type="submit">Optimize Route</button>
+    </form>
+    <div id="result"></div>
 
+    <script src="script.js" defer></script>
+</body>
+</html>
