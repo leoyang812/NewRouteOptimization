@@ -43,5 +43,52 @@
       </form>
       
       <div id="result"></div>
+
+      <script>
+        function initMap() {
+          const startAddressInput = document.getElementById('start-address');
+          const goalAddressInput = document.getElementById('goal-address');
+
+          const startAutocomplete = new google.maps.places.Autocomplete(startAddressInput, {
+            componentRestrictions: { country: 'ca' },
+            types: ['address'],
+          });
+
+          const goalAutocomplete = new google.maps.places.Autocomplete(goalAddressInput, {
+            componentRestrictions: { country: 'ca' },
+            types: ['address'],
+          });
+        }
+
+        // Add event listener to handle adding waypoints
+        document.getElementById('num-waypoints').addEventListener('change', () => {
+          const numWaypoints = parseInt(document.getElementById('num-waypoints').value);
+          const waypointsDiv = document.getElementById('waypoints');
+
+          // Remove existing waypoints
+          while (waypointsDiv.firstChild) {
+            waypointsDiv.firstChild.remove();
+          }
+
+          // Add new waypoints
+          for (let i = 0; i < numWaypoints; i++) {
+            const label = document.createElement('label');
+            label.textContent = `Waypoint ${i + 1}:`;
+            waypointsDiv.appendChild(label);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = `waypoint-${i}`;
+            input.name = `waypoints[]`;
+            input.required = true;
+            waypointsDiv.appendChild(input);
+
+            const br = document.createElement('br');
+            waypointsDiv.appendChild(br);
+            const br2 = document.createElement('br');
+            waypointsDiv.appendChild(br2);
+          }
+        });
+      </script>
 </body>
 </html>
