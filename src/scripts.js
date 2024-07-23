@@ -130,3 +130,7 @@ async function dijkstra(graph, startNode, goalNode, cargoCapacity, numTrucks, ve
   
     return distances;
   }
+
+  document.getElementById('optimize-button').addEventListener('click', () => {
+    document.getElementById('haulstream-image').style.display = 'block';
+  });

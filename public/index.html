@@ -8,6 +8,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLWsl5v2a7kj2ggZnTuAhHt3WzamVNPE0&libraries=places&callback=initMap" async defer></script>
 </head>
 <body>
+  
     <form id="route-form">
         <h2>Route Optimization</h2>
         <label for="start-address">Start Address:</label>
@@ -37,6 +38,8 @@
         </div>
         <br><br>
         <button type="submit">Calculate Route</button>
+        <button id="optimize-button">Optimize</button>
+        <img id="haulstream-image" src="haulstream.png" style="display: none;">
       </form>
       
       <div id="result"></div>
