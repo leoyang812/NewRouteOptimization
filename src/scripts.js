@@ -52,7 +52,6 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-
 async function geocodeAddress(address) {
   const response = await geocodingApi.geocode({
     address,
@@ -85,52 +84,55 @@ function createGraph(startCoords, goalCoords, cargoCapacity, numTrucks, vehicleT
 }
 
 function haversine(coord1, coord2) {
-    function haversine(coord1, coord2) {
-        const R = 6371; // Earth radius in kilometers
-        const lat1 = degToRad(coord1[0]);
-        const lon1 = degToRad(coord1[1]);
-        const lat2 = degToRad(coord2[0]);
-        const lon2 = degToRad(coord2[1]);
-      
-        const dLat = lat2 - lat1;
-        const dLon = lon2 - lon1;
-      
-        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      
-        return R * c;
-      }
+  const R = 6371; // Earth radius in kilometers
+  const lat1 = degToRad(coord1[0]);
+  const lon1 = degToRad(coord1[1]);
+  const lat2 = degToRad(coord2[0]);
+  const lon2 = degToRad(coord2[1]);
+
+  const dLat = lat2 - lat1;
+  const dLon = lon2 - lon1;
+
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
 }
+
 function degToRad(deg) {
-    return deg * (Math.PI / 180);
-  }
+  return deg * (Math.PI / 180);
+}
+
 async function dijkstra(graph, startNode, goalNode, cargoCapacity, numTrucks, vehicleType) {
-    const distances = {};
-    const paths = {};
-    const queue = [startNode];
-  
-    distances[startNode] = 0;
-    paths[startNode] = [];
-  
-    while (queue.length > 0) {
-      const currentNode = queue.shift();
-      const currentDistance = distances[currentNode];
-  
-      for (const neighbor of graph.edges[currentNode]) {
-        const distance = currentDistance + graph.distances[[currentNode, neighbor]];
-        const newCargo = cargoCapacity - numTrucks * vehicleType;
-  
-        if (!distances[neighbor] || distance < distances[neighbor] && newCargo >= 0) {
-          distances[neighbor] = distance;
-          paths[neighbor] = [...paths[currentNode], neighbor];
-          queue.push(neighbor);
-        }
+  const distances = {};
+  const paths = {};
+  const queue = [startNode];
+
+  distances[startNode] = 0;
+  paths[startNode] = [];
+
+  while (queue.length > 0) {
+    const currentNode = queue.shift();
+    const currentDistance = distances[currentNode];
+
+    for(const neighbor of graph.edges[currentNode]) {
+      const distance = currentDistance + graph.distances[[currentNode, neighbor]];
+      const newCargo = cargoCapacity - numTrucks * vehicleType;
+
+      if (!distances[neighbor] || distance < distances[neighbor] && newCargo >= 0) {
+        distances[neighbor] = distance;
+        paths[neighbor] = [...paths[currentNode], neighbor];
+        queue.push(neighbor);
       }
     }
-  
-    return distances;
   }
 
+  return distances;
+}
+
+// Add the event listener to the optimize-button element after the DOM has loaded
+document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('optimize-button').addEventListener('click', () => {
     document.getElementById('haulstream-image').style.display = 'block';
   });
+});
