@@ -38,13 +38,13 @@
         </div>
         <br><br>
         <button type="submit">Calculate Route</button>
-         <button id="optimize-button">Optimize</button>
-      <img id="haulstream-image" src="haulstream.png" style="display: none;">
-      </form>
+        <button type="button" id="optimize-button">Optimize</button>
+        <img id="haulstream-image" src="haulstream.png" style="display: none;">
+    </form>
       
-      <div id="result"></div>
+    <div id="result"></div>
 
-      <script>
+    <script>
         function initMap() {
           const startAddressInput = document.getElementById('start-address');
           const goalAddressInput = document.getElementById('goal-address');
@@ -88,6 +88,11 @@
             const br2 = document.createElement('br');
             waypointsDiv.appendChild(br2);
           }
+        });
+
+        // Redirect to step2.html when Optimize button is clicked
+        document.getElementById('optimize-button').addEventListener('click', () => {
+          window.location.href = 'step2.html';
         });
       </script>
 </body>
