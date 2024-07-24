@@ -135,4 +135,7 @@ document.getElementById('optimize-button').addEventListener('click', () => {
   document.getElementById('haulstream-image').style.display = 'block';
   resultDiv.innerHTML += `<p>Optimization in progress...</p>`;
   // You can add more code here to handle the optimization process
+  setTimeout(() => {
+    window.location.href = 'step2.html'; 
+  }, 1000); // 1 second delay
 });
